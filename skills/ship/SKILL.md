@@ -1,3 +1,10 @@
+---
+name: ship
+description: Validate, commit, push, and create a PR in one flow. Use when changes are ready to ship.
+user-invocable: true
+argument-hint: "[optional: base branch or PR description]"
+---
+
 # Ship: Validate, Commit & PR
 
 Run checks, create branch, group commits logically, and open a PR.
