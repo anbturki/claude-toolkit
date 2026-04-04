@@ -1,6 +1,6 @@
 # Claude Toolkit
 
-19 production-tested skills for AI coding agents.
+21 production-tested skills for AI coding agents.
 
 ## Install
 
@@ -69,6 +69,8 @@ rm -rf /tmp/ct
 |-------|-------------|
 | **build-ui** | Frontend implementation with component reuse and UI pattern compliance |
 | **manage-secrets** | Sync .env secrets via GitHub Variables |
+| **observability** | Audit and improve logging — transports, coverage, request context, structured logs |
+| **audit** | Exhaustive zero-assumption audit — reads every file, enforces CLAUDE.md, reuses skills/agents |
 
 ## Compatibility
 
