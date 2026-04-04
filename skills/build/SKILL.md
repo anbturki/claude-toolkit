@@ -37,8 +37,8 @@ Approved plan only.
 
 ## After Writing Code
 
-1. Run `bun run check` — fix any lint/format/type errors
-2. Run `bun test` — ensure no tests are broken
+1. Run the project's lint/format/typecheck command — fix any errors
+2. Run the project's test command — ensure no tests are broken
 3. If working from a task list, mark the task as completed
 4. Show: files created/modified, what was implemented (1-2 sentences)
 

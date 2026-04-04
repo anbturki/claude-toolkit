@@ -9,23 +9,35 @@ allowed-tools: Bash, Read, TaskList
 
 Run the full validation suite and report clear results. No code changes — just check and report.
 
+## Step 0: Detect Project Commands
+
+Before running anything, detect the correct commands:
+1. Read `CLAUDE.md` for validation commands
+2. Check `package.json` scripts: `typecheck`, `lint`, `check`, `test`, `format`
+3. Check `Makefile` for relevant targets
+4. Common patterns by runtime:
+   - **Bun**: `bun run typecheck`, `bun run check`, `bun test`
+   - **Node/npm**: `npm run typecheck`, `npm run lint`, `npm test`
+   - **pnpm**: `pnpm typecheck`, `pnpm lint`, `pnpm test`
+   - **Deno**: `deno check`, `deno lint`, `deno test`
+
 ## Validation Steps
 
-Run these commands in order and report results:
+Run these in order using the detected commands:
 
 ### 1. TypeScript Type Check
 ```bash
-bun run typecheck
+# e.g., bun run typecheck, npx tsc --noEmit, pnpm typecheck
 ```
 
-### 2. Lint & Format (Biome)
+### 2. Lint & Format
 ```bash
-bun run check
+# e.g., bun run check, npm run lint, npx biome check, npx eslint .
 ```
 
 ### 3. Tests
 ```bash
-bun test
+# e.g., bun test, npm test, pnpm test, npx vitest
 ```
 
 ## Output Format

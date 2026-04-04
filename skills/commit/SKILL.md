@@ -72,9 +72,9 @@ EOF
 
 # Refactor
 git commit -m "$(cat <<'EOF'
-refactor: migrate contact service to @confera/modules
+refactor: extract auth logic into shared module
 
-Move business logic to shared modules package
+Move authentication business logic to shared package
 EOF
 )"
 ```

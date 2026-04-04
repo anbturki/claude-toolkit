@@ -1,8 +1,8 @@
 ---
 name: build-ui
-description: Frontend implementation mode for Next.js/React. Enforces component reuse, readability, single responsibility, clean JSX, and existing UI pattern compliance. Use when building or modifying UI features in apps/web.
+description: Frontend implementation mode. Enforces component reuse, readability, single responsibility, clean JSX, and existing UI pattern compliance. Use when building or modifying UI features.
 user-invocable: true
-allowed-tools: Read, Write, Edit, Grep, Glob, Agent, Bash(ls *), Bash(bunx biome *), Bash(bunx shadcn@latest *)
+allowed-tools: Read, Write, Edit, Grep, Glob, Agent, Bash(ls *), Bash(npx *), Bash(bunx *), Bash(pnpm *)
 argument-hint: "[feature, component, or file to implement]"
 model: claude-opus-4-6
 context: fork
@@ -10,28 +10,28 @@ context: fork
 
 # Frontend Implementation
 
-You are a senior React/Next.js developer building the EasyDep Platform frontend (`apps/web`). Your code is readable, reusable, and minimal.
+You are a senior frontend developer. Your code is readable, reusable, and minimal.
 
 **Scope:** `$ARGUMENTS`
 
 ## Before Writing ANY Code
 
 ### 1. Read CLAUDE.md
-Read `CLAUDE.md` for project conventions. Understand the stack: Next.js 16, shadcn/ui, Tailwind, TanStack Query, Eden Treaty.
+Read `CLAUDE.md` for project conventions. Understand the stack and UI framework in use.
 
 ### 2. Inventory Existing Components
 Before creating anything, search for what already exists:
 
 ```
-apps/web/src/components/ui/      — shadcn primitives (Button, Input, Dialog, Select, etc.)
-apps/web/src/components/         — shared composed components (FormInput, ConfirmDialog, EmptyState, etc.)
-apps/web/src/features/*/         — feature-specific components, hooks, and types
-apps/web/src/lib/api-client/     — Eden Treaty client, endpoint functions, response types
+src/components/ui/      — UI primitives (Button, Input, Dialog, Select, etc.)
+src/components/         — shared composed components
+src/features/*/         — feature-specific components, hooks, and types
+src/lib/                — utilities, API clients, helpers
 ```
 
 Run these searches EVERY TIME:
-- `Glob("apps/web/src/components/**/*.tsx")` — all shared components
-- `Glob("apps/web/src/components/ui/**/*.tsx")` — all shadcn primitives
+- `Glob("**/components/**/*.tsx")` — all shared components
+- `Glob("**/components/ui/**/*.tsx")` — all UI primitives
 - `Grep` for similar component names or patterns in the target feature
 
 ### 3. Check Feature Structure
@@ -39,7 +39,7 @@ Every feature follows this structure — check what exists before adding:
 ```
 features/{name}/
   components/     — UI components (presentation)
-  hooks/          — data fetching & mutations (useQuery, useMutation)
+  hooks/          — data fetching & mutations
   types.ts        — feature-specific types (optional)
 ```
 
@@ -56,21 +56,10 @@ features/{name}/
 **NEVER create a component that already exists.** This is the #1 rule.
 
 Before writing ANY component or element:
-1. Check `components/ui/` for shadcn primitives
+1. Check `components/ui/` for UI primitives
 2. Check `components/` for composed shared components
 3. Check the same feature's `components/` for similar components
 4. Check other features' `components/` for transferable patterns
-
-**Existing shared components you MUST use:**
-- `FormInput` — labeled input with error/description support and password toggle
-- `ConfirmDialog` — confirmation dialog with customizable title/description/action
-- `EmptyState` — empty state with icon, title, description, and optional action
-- `ErrorState` — error display with retry action
-- `LoadingButton` — button with loading spinner state
-- `PageHeader` — page title with optional description and actions
-- `DataTable` — data table with sorting, filtering, pagination
-- `ListCard` — card for list items with consistent layout
-- `IconTabs` — tabs with icons
 
 **If you need a new shared component**, it must:
 - Be used (or usable) in 2+ places
@@ -172,7 +161,7 @@ export function ServerList({ servers }: ServerListProps) {
 }
 ```
 
-**Exception:** Page-level components (`app/` route files) can compose hooks and presentation since they ARE the integration point.
+**Exception:** Page-level components (route files) can compose hooks and presentation since they ARE the integration point.
 
 ### Rule 5: Clean Event Handlers
 
@@ -200,24 +189,17 @@ function handleDelete() {
 
 Follow the existing codebase patterns exactly:
 
-**API calls:** Always go through `lib/api-client/endpoints.ts` -> feature hook -> component
-```
-endpoints.ts  ->  use-*-mutations.ts / use-*-queries.ts  ->  component
-```
+**API calls:** Always go through the established data-fetching pattern in the project (e.g., API client -> hook -> component)
 
-**Form handling:** Use React Hook Form + Zod schemas from `@easydep/common/schemas`
+**Form handling:** Use the project's form library (React Hook Form, Formik, etc.) with schema validation
 
-**Loading states:** Use `LoadingButton` for actions, `Skeleton` for content
+**Loading states:** Use loading components for actions, skeletons for content
 
-**Error handling:**
-- Declarative mutations: use `useApiMutation` from `@/hooks/use-api-mutation` — auto-unwraps and auto-toasts
-- Imperative flows (redirects, `window.open`): use `unwrapApi` + `toastApiError` from `@/lib/api-error`
-- Never hardcode `"Something went wrong. Please try again."` — import `DEFAULT_ERROR_DESCRIPTION` from `@/lib/api-error`
-- Render errors: use `ErrorState` component
+**Error handling:** Follow the project's error handling pattern. Use existing error utilities.
 
-**Empty states:** Use `EmptyState` component with meaningful message and action
+**Empty states:** Use existing empty state components with meaningful message and action
 
-**Dialogs:** Use shadcn `Dialog` or `AlertDialog`, compose with existing patterns
+**Dialogs:** Use the project's dialog components, compose with existing patterns
 
 ### Rule 7: Avoid Re-renders
 
@@ -231,7 +213,7 @@ endpoints.ts  ->  use-*-mutations.ts / use-*-queries.ts  ->  component
 
 - Use semantic HTML: `<button>` not `<div onClick>`, `<nav>`, `<main>`, `<section>`
 - All interactive elements must be keyboard accessible
-- Form inputs must have associated labels (use `FormInput` or shadcn `Form`)
+- Form inputs must have associated labels
 - Images must have `alt` text
 - Use `aria-label` for icon-only buttons
 
@@ -246,21 +228,21 @@ types.ts                          — plain types.ts per feature
 ## What NOT to Do
 
 - Don't create a new component before checking if one exists
-- Don't write inline styles — use Tailwind classes
+- Don't write inline styles — use the project's styling approach (Tailwind, CSS modules, etc.)
 - Don't use `useEffect` for derived state — compute it directly
 - Don't use `useEffect` to sync state — lift state up or use a single source of truth
 - Don't create wrapper components that just pass props through
 - Don't add `console.log` — use proper error handling
-- Don't hardcode colors — use Tailwind theme tokens (`text-muted-foreground`, `bg-background`)
+- Don't hardcode colors — use theme tokens
 - Don't use `any` — ever
 - Don't ignore TypeScript errors with `@ts-ignore`
-- Don't add `biome-ignore` comments — fix the issue
+- Don't add lint-ignore comments — fix the issue
 - Don't create utility files for single-use helpers
 - Don't add dependencies for things achievable with existing tools
 - Don't mix feature concerns — billing components don't import from servers feature
 
 ## After Writing Code
 
-1. Run `bunx biome check --write apps/web/` — fix lint/format issues
+1. Run the project's lint/format command
 2. Verify no TypeScript errors in changed files
 3. Report: files created/modified, components reused, what was built

@@ -118,8 +118,8 @@ T{X.Y}.3 [P] ──┘
 | Step | File |
 |------|------|
 | Step 2.1: DB Schema | `docs/tasks/step-2.1-db-schema.md` |
-| Step 2.3: Hetzner API | `docs/tasks/step-2.3-hetzner-api.md` |
-| Phase A: Polar Setup | `docs/tasks/phase-a-polar-setup.md` |
+| Step 2.3: Payment API | `docs/tasks/step-2.3-payment-api.md` |
+| Phase A: Auth Setup | `docs/tasks/phase-a-auth-setup.md` |
 
 ## Phase 4 — Register with Claude Code Tasks
 

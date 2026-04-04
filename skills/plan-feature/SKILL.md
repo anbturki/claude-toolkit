@@ -123,7 +123,7 @@ What this phase implements.
 - [ ] Export from index
 
 ### Service
-- [ ] Create service in @confera/modules
+- [ ] Create service module
 - [ ] Add error classes
 - [ ] Export from package.json
 
@@ -134,8 +134,7 @@ What this phase implements.
 ## Verification
 
 \`\`\`bash
-bun run check
-bun test
+# Run the project's check/test commands
 \`\`\`
 ```
 
@@ -170,18 +169,13 @@ What this phase implements.
 - [ ] Create mutation hooks
 - [ ] Create components
 
-### Translations
-- [ ] en.json
-- [ ] ar.json
-- [ ] ja.json
-
 ### Pages
 - [ ] Create page
 
 ## Verification
 
 \`\`\`bash
-bun run check
+# Run the project's check command
 \`\`\`
 ```
 

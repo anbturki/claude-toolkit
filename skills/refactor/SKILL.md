@@ -2,7 +2,7 @@
 name: refactor
 description: Clean code optimization. Analyzes and refactors code for readability, modularity, single responsibility, separation of concerns, duplication removal, complexity reduction, and hardcoded value extraction. Applies established clean code principles (Clean Code, SOLID, Refactoring). Use on files, features, or the entire codebase.
 user-invocable: true
-allowed-tools: Read, Write, Edit, Grep, Glob, Agent, Bash(ls *), Bash(bunx biome *)
+allowed-tools: Read, Write, Edit, Grep, Glob, Agent, Bash(ls *), Bash(npx *), Bash(bunx *), Bash(pnpm *)
 argument-hint: "[file path, feature name, or 'full' for entire codebase]"
 model: claude-opus-4-6
 context: fork
@@ -33,7 +33,7 @@ Check how similar code is structured elsewhere in the project. Your refactoring 
 ### 3. Scope the Work
 - **Single file:** Analyze and refactor that file
 - **Feature name:** Find all files in that feature, analyze and refactor
-- **`full`:** Run `code-optimizer` agent on `apps/` and `packages/` directories, then refactor based on findings
+- **`full`:** Run `code-optimizer` agent on the project's source directories, then refactor based on findings
 
 ## Analysis Phase
 
@@ -220,7 +220,7 @@ if (status === DeploymentStatus.PENDING) { ... }
 ```
 
 #### 4c. What needs extracting
-- Status values, error codes, event names → const objects (check `packages/common/constants/`)
+- Status values, error codes, event names → const objects (check shared/common packages)
 - Timeout durations, retry counts, limits → named constants at file or module level
 - URLs, paths, endpoints → config or constants
 - Error messages used in multiple places → error constants
@@ -322,8 +322,8 @@ For each file:
 
 ### Step 4: Verify
 After all changes:
-1. Run `bunx biome check --write .` to fix formatting/linting
-2. Check for broken imports with `bunx tsc --noEmit` on affected packages
+1. Run the project's lint/format command (e.g., `biome check --write`, `eslint --fix`, `prettier --write`)
+2. Run the project's typecheck command (e.g., `tsc --noEmit`)
 3. Report: files changed, what was improved, any issues found
 
 ## What NOT to Do
