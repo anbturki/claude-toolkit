@@ -1,6 +1,6 @@
 ---
 name: github-wiki
-description: Publish and maintain a GitHub repo's wiki - long-form docs, research notes, design write-ups - via git against the repo's separate <repo>.wiki.git (there is no REST/GraphQL API for wiki content). Use when asked to create a GitHub wiki, move docs/research to the wiki, or add/update a wiki page. Not the default destination for documentation - see section 0 before using this.
+description: Publish and maintain a GitHub repo's wiki - long-form docs, research notes, design write-ups - via git against the repo's separate <repo>.wiki.git (there is no REST/GraphQL API for wiki content, and it is unavailable at all for a private repo owned by an organization on the GitHub Free plan). Use when asked to create a GitHub wiki, move docs/research to the wiki, or add/update a wiki page. Not the default destination for documentation - see section 0 before using this; see section 0a if the wiki won't even enable.
 allowed-tools: Read, Grep, Glob, Bash(git *), Bash(gh *)
 ---
 
@@ -10,6 +10,24 @@ A wiki is a **separate git repository** (`<owner>/<repo>.wiki.git`), rendered
 by Gollum. There is no REST or GraphQL API for its content at all - the
 only access path is cloning that repo like any other and pushing plain
 markdown files. `gh` has no subcommand that touches wiki content.
+
+## 0a. Check plan availability BEFORE anything else
+
+**GitHub Wikis are unavailable for a private repo owned by an
+organization on the Free plan** - confirmed directly (`gh api
+orgs/<org> --jq .plan.name` returned `free`, and `gh repo edit
+--enable-wiki` plus every clone attempt against `<repo>.wiki.git` failed
+with 404, even with a valid token doing the push). Public repos on any
+plan, and *personal-account-owned* private repos, still get one - only
+the org-private combination is blocked, and no amount of API/CLI/token
+work routes around it since it isn't a scope gap, it's the product
+simply not offering the feature at that tier.
+
+Check first: `gh api orgs/<owner> --jq '{plan: .plan.name}'` and `gh api
+repos/<owner>/<repo> --jq '{private, visibility}'`. If the plan is
+`free` and the repo is org-owned and private, stop here - either the org
+upgrades to Pro/Team/Enterprise, or use `clickup-docs` instead, which has
+no such restriction and additionally isn't scoped to one repo/org at all.
 
 ## 0. When NOT to use this - check first, every time
 

@@ -1,6 +1,6 @@
 ---
 name: github-migrate
-description: One-time migration of a project's disk-based tasks, feature requests, documentation, and research notes - whatever local convention it uses (notes/tasks/, a vault-style feature-requests directory, TODO.md, docs/, research/) - onto GitHub-native equivalents, using github-issues, github-projects, and github-wiki. Use when asked to "set up a GitHub Project", "migrate tasks to GitHub", "move our docs/research to the wiki", "centralize this project on GitHub", or "clean up local tracking files". For ongoing day-to-day issue/board/wiki work after the migration, use the three skills directly instead of this one.
+description: One-time migration of a project's disk-based tasks, feature requests, documentation, and research notes - whatever local convention it uses (notes/tasks/, a vault-style feature-requests directory, TODO.md, docs/, research/) - onto GitHub-native equivalents, using github-issues, github-projects, and github-wiki. Use when asked to "set up a GitHub Project", "migrate tasks to GitHub", "move our docs/research to the wiki", "centralize this project on GitHub", or "clean up local tracking files". For ongoing day-to-day issue/board/wiki work after the migration, use the three skills directly instead of this one. If work spans multiple GitHub orgs/accounts, or the target repo is a private org repo on the GitHub Free plan (Wikis are unavailable there entirely), see clickup-tasks/clickup-docs instead - same migration shape, different destination.
 disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Bash(gh *), Bash(git *)
 ---
@@ -99,3 +99,11 @@ speed up the remainder.
 - **Not a one-shot, no-confirmation script.** Every deletion happens only
   after its GitHub-side counterpart is confirmed to exist; the user
   confirms scope before anything starts.
+- **Not the only destination.** GitHub Wikis are unavailable for a private
+  repo owned by an organization on the Free plan - confirmed directly, not
+  a UI quirk (public repos and personal-account-owned private repos still
+  get one; org-owned private repos need Pro/Team/Enterprise). If that
+  applies, or if tasks/docs need to be tracked across more than one
+  GitHub org/account from a single place, use `clickup-tasks`/`clickup-docs`
+  instead - same discovery and classification steps in section 1, a
+  different destination in sections 2-3.
