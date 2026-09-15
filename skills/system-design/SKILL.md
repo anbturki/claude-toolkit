@@ -76,3 +76,11 @@ Adapt paths to the project's actual directory structure.
 
 Present the design clearly with code blocks showing the proposed API. End with:
 "Approve this design? Then proceed with implementation."
+
+## See also
+
+- [[typescript-types]] - discriminated unions, `as const` objects, utility types for derived shapes
+- [[typescript-no-any]] - what to reach for when "I don't know the shape yet" tempts you to `any`
+- [[zod-schema]] - validation schema scaffolding for the inputs you design
+- [[clean-code-srp]] - one responsibility per module/interface you propose
+- [[build]] - the implementation skill that consumes this design

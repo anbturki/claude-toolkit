@@ -1,6 +1,7 @@
 ---
-name: react-hook
-description: Scaffold React hooks for data fetching (queries) and mutations. Auto-adapts to TanStack Query, SWR, or custom hooks. Use when adding data hooks to a frontend feature.
+name: react-hooks
+description: Scaffold React hooks for data fetching (queries) and mutations. Auto-adapts to TanStack Query, SWR, or Apollo. Use when adding data hooks to a frontend feature.
+user-invocable: true
 argument-hint: [entity-name]
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash(ls *)
 ---

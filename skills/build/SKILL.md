@@ -51,3 +51,18 @@ Approved plan only.
 - Change formatting or style in files you're not working on
 - Disable CORS, SSL validation, or auth for convenience
 - Commit .env files or credentials to git
+
+## See also
+
+For deeper rules referenced in the standards above:
+
+- [[typescript-no-any]] - the `any` / assertion ban
+- [[typescript-types]] - utility types and discriminated unions
+- [[typescript-narrowing]] - `unknown` + type guards for external input
+- [[clean-code-readability]] - no inline complex conditions, no clever one-liners
+- [[clean-code-srp]] - single responsibility, function/component size limits
+- [[clean-code-dry]] - Rule of Three for extraction
+- [[clean-code-no-magic-values]] - replace literals with named constants
+- [[clean-code-complexity]] - keep functions under cyclomatic 10 / cognitive 15
+- [[clean-code-naming]] - intent-revealing names
+- [[clean-code]] - run a full clean-code pass after the build

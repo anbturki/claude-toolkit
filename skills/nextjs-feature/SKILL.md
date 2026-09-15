@@ -1,149 +1,53 @@
 ---
 name: nextjs-feature
-description: Scaffold a Next.js frontend feature with components, hooks, server/client split, and data fetching. Use when adding new UI features to a Next.js app.
-argument-hint: [feature-name]
+description: Scaffold a Next.js feature folder with the right server/client split. Defines folder structure and Server Component vs "use client" boundaries. Pairs with react-hooks for data hooks. Use when adding a new UI feature to a Next.js app.
+user-invocable: true
+argument-hint: "[feature-name]"
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash(ls *)
 ---
 
-# Create Next.js Feature
+# Next.js Feature Structure
 
-Scaffold a new frontend feature for `$ARGUMENTS`.
+Scaffold a new frontend feature for `$ARGUMENTS`. This skill defines **structure and boundaries** - for hook bodies see [[react-hooks]], for component rules see [[react-components]].
 
-## Step 1: Learn Project Patterns
+## Step 1: Learn project patterns
 
 1. **Read CLAUDE.md** for frontend conventions
-2. **Detect data fetching approach**: TanStack Query, SWR, Server Components, server actions
-3. **Find existing features**:
+2. **Detect router**: App Router (`app/` directory) vs Pages Router (`pages/` directory)
+3. **Detect data fetching**: Server Components, server actions, TanStack Query, SWR
+4. **Find existing features**:
    ```
    Glob("**/features/*/")
    Glob("**/modules/*/")
    Glob("**/app/**/page.tsx")
    ```
-4. **Read 2-3 existing features** — learn:
-   - Directory structure
-   - Server vs client component split
-   - How data is fetched (RSC, hooks, server actions)
-   - How mutations work
-   - How types are derived
-   - UI component library in use (shadcn, MUI, Chakra, etc.)
+5. **Read 2-3 existing features** to learn the project's specific conventions
 
-## Step 2: Create Feature Structure
+## Step 2: Folder structure
 
 ```
 features/${feature}/
-├── index.ts                    # Barrel exports
-├── components/
-│   ├── ${entity}-list.tsx      # List component
-│   ├── ${entity}-card.tsx      # Card/item component
-│   └── create-${entity}-dialog.tsx  # Create dialog (if needed)
-├── hooks/
-│   ├── use-queries.ts          # Query hooks (TanStack Query/SWR)
-│   └── use-mutations.ts        # Mutation hooks
-└── types.ts                    # Feature-specific types (optional)
+  index.ts                       # Barrel exports
+  components/
+    ${entity}-list.tsx           # List component
+    ${entity}-card.tsx           # Card/item component
+    create-${entity}-dialog.tsx  # Create dialog (if needed)
+  hooks/
+    use-queries.ts               # Query hooks (see react-hooks skill)
+    use-mutations.ts             # Mutation hooks (see react-hooks skill)
+  types.ts                       # Feature-specific types (optional)
 ```
 
-## Step 3: Create Files
+## Step 3: Server / client split
 
-### Query Hooks
+### Page (Server Component, App Router)
+
+Fetch data in the server component, pass as props to client components.
+
 ```typescript
-"use client";
-
-import { useQuery } from "@tanstack/react-query";  // or SWR
-import { list${Entity}s, get${Entity} } from "<api-client>";
-
-export function use${Entity}s(params?: ListParams) {
-  return useQuery({
-    queryKey: ["${entities}", params],
-    queryFn: () => list${Entity}s(params),
-  });
-}
-
-export function use${Entity}(id: string) {
-  return useQuery({
-    queryKey: ["${entities}", id],
-    queryFn: () => get${Entity}(id),
-    enabled: !!id,
-  });
-}
-```
-
-### Mutation Hooks
-```typescript
-"use client";
-
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { create${Entity}, update${Entity}, delete${Entity} } from "<api-client>";
-
-export function useCreate${Entity}() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (input: Create${Entity}Input) => create${Entity}(input),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["${entities}"] });
-      router.refresh();  // if using RSC
-    },
-  });
-}
-
-export function useUpdate${Entity}() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Update${Entity}Input }) =>
-      update${Entity}(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["${entities}"] });
-      router.refresh();
-    },
-  });
-}
-
-export function useDelete${Entity}() {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (id: string) => delete${Entity}(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["${entities}"] });
-      router.refresh();
-    },
-  });
-}
-```
-
-### List Component
-```typescript
-import type { ${Entity}Item } from "../types";
-
-interface ${Entity}ListProps {
-  ${entities}: ${Entity}Item[];
-}
-
-export function ${Entity}List({ ${entities} }: ${Entity}ListProps) {
-  if (${entities}.length === 0) {
-    return <EmptyState message="No ${entities} found" />;
-  }
-
-  return (
-    <div className="space-y-4">
-      {${entities}.map((item) => (
-        <${Entity}Card key={item.id} ${entity}={item} />
-      ))}
-    </div>
-  );
-}
-```
-
-### Page (App Router)
-```typescript
-// app/${entities}/page.tsx (Server Component)
+// app/${entities}/page.tsx
 import { ${Entity}List } from "@/features/${feature}";
-import { list${Entity}s } from "<api-or-db>";
+import { list${Entity}s } from "<server-side-data-source>";
 
 export default async function ${Entity}sPage() {
   const { data } = await list${Entity}s();
@@ -157,12 +61,30 @@ export default async function ${Entity}sPage() {
 }
 ```
 
+### `"use client"` rules
+
+- Only on components that use hooks, browser APIs, or event handlers
+- Push the boundary as deep as possible - keep parents server-rendered
+- Server Components can render Client Components, but not vice versa
+
+### Mutation flow
+
+1. Server Component renders a Client Component with a form / button
+2. Client Component calls a hook from `hooks/use-mutations.ts` (see [[react-hooks]])
+3. After success, call `router.refresh()` to re-render server components, or `revalidatePath()` from a server action
+
 ## Rules
 
-1. **"use client"** only on components with hooks/interactivity
-2. **Server Components by default** — fetch data in server components, pass as props
-3. **Derive types from API** — never manually duplicate response types
-4. **Use project's data fetching library** — TanStack Query, SWR, or plain fetch
-5. **Reuse UI components** — check existing shared components before creating new ones
-6. **`router.refresh()`** after mutations — to update server components
-7. **Separate data from presentation** — hooks fetch, components render
+1. **Server Components by default** - opt into client only for interactivity
+2. **`"use client"` only on the leaf that needs it** - don't mark a whole tree as client
+3. **Derive types from API** - never manually duplicate response types
+4. **Use the project's data-fetching library** - don't introduce a new one
+5. **Separate hooks from components** - hooks in `hooks/`, components in `components/`
+6. **`router.refresh()`** after mutations to update Server Components
+
+## See also
+
+- [[react-hooks]] - query and mutation hook scaffolding (TanStack Query, SWR, Apollo)
+- [[react-components]] - component file rules (max lines, separation of concerns)
+- [[react-jsx]] - keep JSX scannable
+- [[nextjs-route]] - if the feature needs API routes

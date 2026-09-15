@@ -198,3 +198,10 @@ docs/features/contact-import/
 4. **Backend before frontend** - API must exist before UI
 5. **Clear dependencies** - State what each phase depends on
 6. **Checkboxes** - Track implementation progress
+
+## See also
+
+- [[deep-research]] - if the feature needs upfront research (options analysis, technical decisions), run this in "product discovery" mode before the PRD
+- [[system-design]] - after the PRD is approved, design the module APIs, types, and schemas for each backend phase
+- [[plan-tasks]] - break a single phase into atomic, trackable sub-tasks for implementation
+- [[build]] - the implementation skill that consumes each phase

@@ -205,3 +205,9 @@ export const create${Entity}Schema = z.object({
 5. **Feed into schemas** — validation schemas should reference constants, not hardcode values
 6. **Underscore separators for large numbers** — `86_400_000` not `86400000`
 7. **No premature extraction** — only extract if used in 2+ places or if the meaning isn't obvious
+
+## See also
+
+- [[clean-code-no-magic-values]] - the rule this scaffolder satisfies. When/why to extract.
+- [[clean-code-naming]] - UPPER_SNAKE_CASE conventions
+- [[typescript-types]] - `as const` patterns and utility types for derived shapes

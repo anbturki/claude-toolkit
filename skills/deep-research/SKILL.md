@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: Evidence-based deep research mode. Use for any question, comparison, how-to, or investigation — technical or non-technical. Enforces source validation, cross-referencing, and confidence ratings. Saves structured findings to docs/.
+description: Evidence-based research mode. Use for any question, comparison, how-to, investigation, or product/feature discovery before building. Enforces source validation, cross-referencing, and confidence ratings. Three output modes - quick inline answer, single-file research doc, or multi-file product-discovery folder under docs/.
 user-invocable: true
 allowed-tools: Read, Edit, Grep, Glob, WebSearch, WebFetch, Bash(ls *), Bash(mkdir *)
 argument-hint: "[question or topic to research]"
@@ -19,8 +19,31 @@ If you can't verify it, you say so. Every claim needs evidence.
 
 ## Before Starting
 
-- Check `docs/` for existing research files (`research-*.md`) to avoid duplicating prior work.
+- Check `docs/` for existing research files (`research-*.md` or `[topic]/00-overview.md`) to avoid duplicating prior work.
 - If a research file already exists for the topic, update it rather than creating a new one.
+
+## Pick the output mode
+
+| Mode | When to use | Output |
+|---|---|---|
+| **Quick** | One-shot question, comparison, or how-to | Inline answer with sources |
+| **Standard** | Topic worth saving but single-dimensional | `docs/research-[topic].md` |
+| **Product discovery** | Researching a feature, integration, or technical decision before building it | `docs/[topic]/` folder with overview, options, spec, plan, risks |
+
+If the user invokes this skill before building something (a feature, integration, or system decision), default to **Product discovery** mode. For pure investigation, default to **Standard**.
+
+## Codebase analysis (Product discovery mode only)
+
+Before recommending anything for a feature you intend to build, study what already exists:
+
+- Read project instructions (`CLAUDE.md`) and architecture guidelines
+- Map the existing patterns and conventions in the area you're touching
+- Identify what can be reused vs what needs to be built
+- Check how similar features/integrations are already done
+- Map dependencies and impact areas
+- Understand current tech-stack constraints
+
+Skip this phase for non-codebase research (general comparisons, how-tos, decisions unrelated to a specific repo).
 
 ## Research Process
 
@@ -82,7 +105,31 @@ For every library, framework, or tool mentioned:
 - Include sources (with links) for every major claim
 - End with: confidence level, caveats, and anything you couldn't verify
 
-### For Deep Research (save to docs/)
+### For Product Discovery (multi-file folder)
+
+Use when researching a feature, integration, or technical decision before building it. Creates a structured folder under `docs/`:
+
+```
+docs/
+└── [feature-or-topic-name]/
+    |-- 00-overview.md              # Executive summary: what, why, recommendation
+    |-- 01-research-findings.md     # Raw research: sources, evidence, comparisons
+    |-- 02-options-analysis.md      # Options with pros/cons/trade-offs (table format)
+    |-- 03-technical-spec.md        # Chosen approach: architecture, data flow, APIs
+    |-- 04-implementation-plan.md   # Step-by-step phased plan with milestones
+    |-- 05-risks-and-unknowns.md    # Risks, open questions, things to validate later
+```
+
+Standards:
+- Every claim references its source (link)
+- Options analysis includes 2-3 real alternatives with honest trade-offs
+- Implementation plan broken into small, testable phases
+- Risks doc is honest - surface unknowns, don't hide them
+- Tables for comparisons, not paragraphs
+- Each doc: date, sources, confidence level, Recommended vs Rejected labels
+- Write for the developer who implements this 2 weeks from now
+
+### For Standard Research (single file)
 
 Save findings to `docs/research-[topic].md` using this structure:
 
