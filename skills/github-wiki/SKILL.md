@@ -1,7 +1,6 @@
 ---
 name: github-wiki
 description: Publish and maintain a GitHub repo's wiki - long-form docs, research notes, design write-ups - via git against the repo's separate <repo>.wiki.git (there is no REST/GraphQL API for wiki content). Use when asked to create a GitHub wiki, move docs/research to the wiki, or add/update a wiki page. Not the default destination for documentation - see section 0 before using this.
-disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Bash(git *), Bash(gh *)
 ---
 

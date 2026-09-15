@@ -1,7 +1,6 @@
 ---
 name: github-projects
 description: Create and manage a GitHub Project (v2) board via the gh CLI - custom fields, adding issues as items, moving an item's status, cross-repo boards. Use when asked to set up a project board, add tasks/issues to a project, track sprint/status on a board, or move an item between columns. A project is a view over issues, not a replacement for them - pair with github-issues, which owns the actual task content.
-disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Bash(gh *)
 ---
 

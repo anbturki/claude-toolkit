@@ -1,7 +1,6 @@
 ---
 name: github-issues
 description: Create, triage, and manage GitHub issues via the gh CLI - labels, milestones, assignees, search/list, close with reason. Use when asked to file a bug/task/feature as a GitHub issue, triage a backlog, or manage labels/milestones. Pair with github-projects to put the issue on a board, or github-wiki for narrative docs (an issue is never the right place for those).
-disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Bash(gh *)
 ---
 
