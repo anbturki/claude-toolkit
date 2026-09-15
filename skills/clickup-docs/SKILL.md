@@ -1,10 +1,18 @@
 ---
 name: clickup-docs
-description: Create and maintain ClickUp Docs as a project wiki - nested pages, a Home landing page that links to every section, and the exact markdown-formatting rules that keep pages from rendering as mangled walls of text (no hard-wrapped list items, no fenced-code language tags, no toggle/collapsible blocks - none of these survive the Docs API's markdown import). Use when asked to create a ClickUp wiki, write ClickUp documentation, add a ClickUp doc page, or move research/design notes into ClickUp.
+description: Create and maintain ClickUp Docs as a project wiki - nested pages, a Home landing page that links to every section, and the exact markdown-formatting rules that keep pages from rendering as mangled walls of text (no hard-wrapped list items, no fenced-code language tags, no toggle/collapsible blocks - none of these survive the Docs API's markdown import). Use only when github-wiki doesn't fit - a private org repo on GitHub Free that shouldn't be upgraded to Team, or docs that must span many separate GitHub orgs at once. Not the default - see the note on token cost below.
 allowed-tools: Read
 ---
 
 # ClickUp Docs as a wiki
+
+**This is the fallback, not the default - reach for `github-wiki` first if the repo can have one
+(see its section 0a for the exact plan check).** Measured directly with a real tokenizer: the same
+large doc page costs roughly 10% more tokens read back through ClickUp's API (JSON wrapper plus
+escaping) than as a raw wiki `.md` file - a smaller gap than tasks/issues see, but still a real
+cost, and it compounds every time the page is re-read. Reach for ClickUp when a private org repo
+is stuck on GitHub Free and shouldn't be upgraded to Team, or when docs must span many separate
+GitHub orgs without paying for Team on each - not as a general-purpose alternative.
 
 ClickUp Docs is ClickUp's wiki feature - there is no separately-branded "Wiki" product, Docs *is*
 it: nested pages, a Home page, full-text search across the workspace (Docs Hub), and

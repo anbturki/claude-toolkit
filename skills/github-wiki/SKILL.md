@@ -26,8 +26,19 @@ simply not offering the feature at that tier.
 Check first: `gh api orgs/<owner> --jq '{plan: .plan.name}'` and `gh api
 repos/<owner>/<repo> --jq '{private, visibility}'`. If the plan is
 `free` and the repo is org-owned and private, stop here - either the org
-upgrades to Pro/Team/Enterprise, or use `clickup-docs` instead, which has
-no such restriction and additionally isn't scoped to one repo/org at all.
+upgrades to Pro/Team/Enterprise, or use `clickup-docs` instead.
+
+**Prefer upgrading over switching to ClickUp, if the cost is acceptable.**
+Confirmed directly (`anbase/anbase`, real upgrade, real before/after clone
+test): GitHub Team (~$4/user/month) unlocks the wiki immediately once the
+plan change is live - no other blocker remains. It's also the more
+token-efficient choice for an agent reading this content later: the same
+page fetched as a raw wiki file costs measurably fewer tokens than the
+equivalent ClickUp doc fetch (a real tokenizer comparison found ~10% less
+for a large page, more for anything smaller - see `github-migrate`
+section 0a for the full numbers). Reach for `clickup-docs` only when the
+upgrade genuinely isn't wanted, or work must span many separate GitHub
+orgs at once.
 
 ## 0. When NOT to use this - check first, every time
 

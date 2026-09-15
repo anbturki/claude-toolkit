@@ -1,6 +1,6 @@
 ---
 name: github-migrate
-description: One-time migration of a project's disk-based tasks, feature requests, documentation, and research notes - whatever local convention it uses (notes/tasks/, a vault-style feature-requests directory, TODO.md, docs/, research/) - onto GitHub-native equivalents, using github-issues, github-projects, and github-wiki. Use when asked to "set up a GitHub Project", "migrate tasks to GitHub", "move our docs/research to the wiki", "centralize this project on GitHub", or "clean up local tracking files". For ongoing day-to-day issue/board/wiki work after the migration, use the three skills directly instead of this one. If work spans multiple GitHub orgs/accounts, or the target repo is a private org repo on the GitHub Free plan (Wikis are unavailable there entirely), see clickup-tasks/clickup-docs instead - same migration shape, different destination.
+description: One-time migration of a project's disk-based tasks, feature requests, documentation, and research notes - whatever local convention it uses (notes/tasks/, a vault-style feature-requests directory, TODO.md, docs/, research/) - onto GitHub-native equivalents, using github-issues, github-projects, and github-wiki. Use when asked to "set up a GitHub Project", "migrate tasks to GitHub", "move our docs/research to the wiki", "centralize this project on GitHub", or "clean up local tracking files". For ongoing day-to-day issue/board/wiki work after the migration, use the three skills directly instead of this one. GitHub is the default destination - measured ~2.2x fewer tokens than ClickUp for the same task-list data, since gh --json lets you trim fields ClickUp's API can't drop. Only reach for clickup-tasks/clickup-docs when the target repo is a private org repo on GitHub Free and upgrading to Team isn't wanted, or work must aggregate across many separate GitHub orgs without paying for Team on each.
 disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Bash(gh *), Bash(git *)
 ---
@@ -24,6 +24,30 @@ Never assume "everything on disk." Confirm explicitly:
   *different* repo than the one the session is sitting in.
 - Whether local files get deleted after migration or kept as an archive -
   both are reasonable; don't assume delete.
+
+## 0a. Choosing the destination platform
+
+**Default to GitHub.** Measured directly (real tokenizer, not estimated): fetching the same 10
+task/issue records costs **457 tokens via `gh issue list --json ...` vs 1,026 tokens via
+ClickUp's task-list tool** - 2.24x more, because ClickUp's API returns a fixed per-item shape
+(`custom_id`, `priority`, `assignees`, `tags`, `due_date`, a nested `list` object - populated or
+not) with no field-pruning, where `gh --json` returns exactly the fields asked for. For a large
+wiki page the gap narrows to roughly 10%, since the fixed per-response overhead matters less
+against more content - but tasks/issues get re-fetched far more often in a typical agent session,
+so the token cost compounds where it matters most.
+
+Only reach for ClickUp (`clickup-tasks`/`clickup-docs`) when:
+
+- The target repo is a **private repo owned by an organization on the GitHub Free plan** - Wikis
+  are unavailable there entirely (confirmed directly: public repos and personal-account-owned
+  private repos still get one; only the org-private combination is blocked) - **and** upgrading
+  that org to GitHub Team (~$4/user/month, unlocks Wiki on private repos) isn't wanted.
+- Work must be tracked across **many separate GitHub orgs** without paying for Team on each -
+  ClickUp's workspace is decoupled from GitHub org boundaries entirely, where a GitHub Team
+  upgrade is billed per org.
+
+Both are real, situational reasons - not "ClickUp is generally competitive." Confirm which one
+actually applies before defaulting away from GitHub.
 
 ## 1. Discover and classify what's on disk
 
@@ -99,11 +123,6 @@ speed up the remainder.
 - **Not a one-shot, no-confirmation script.** Every deletion happens only
   after its GitHub-side counterpart is confirmed to exist; the user
   confirms scope before anything starts.
-- **Not the only destination.** GitHub Wikis are unavailable for a private
-  repo owned by an organization on the Free plan - confirmed directly, not
-  a UI quirk (public repos and personal-account-owned private repos still
-  get one; org-owned private repos need Pro/Team/Enterprise). If that
-  applies, or if tasks/docs need to be tracked across more than one
-  GitHub org/account from a single place, use `clickup-tasks`/`clickup-docs`
-  instead - same discovery and classification steps in section 1, a
-  different destination in sections 2-3.
+- **Not the only destination.** See section 0a for when ClickUp is the
+  right call instead - the discovery/classification steps in section 1
+  stay the same either way, only the destination in sections 2-3 changes.

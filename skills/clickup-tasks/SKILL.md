@@ -1,10 +1,19 @@
 ---
 name: clickup-tasks
-description: Create and manage ClickUp tasks, lists, folders, and spaces via ClickUp's official MCP server (mcp.clickup.com) - workspace hierarchy best practices, and the REST-API-with-personal-token fallback for the operations the MCP server doesn't expose (space create, space/folder delete, moving a folder between spaces). Use when asked to set up ClickUp for a project, create a ClickUp space/folder/list, file a ClickUp task, or organize a ClickUp workspace's structure.
+description: Create and manage ClickUp tasks, lists, folders, and spaces via ClickUp's official MCP server (mcp.clickup.com) - workspace hierarchy best practices, and the REST-API-with-personal-token fallback for the operations the MCP server doesn't expose (space create, space/folder delete, moving a folder between spaces). Use only when github-issues/github-projects don't fit - a private org repo on GitHub Free that shouldn't be upgraded to Team, or tracking that must span many separate GitHub orgs at once. Not the default - see the note on token cost below.
 allowed-tools: Read, Bash(curl *)
 ---
 
 # ClickUp tasks, lists, folders, spaces
+
+**This is the fallback, not the default - reach for `github-issues`/`github-projects` first.**
+Measured directly with a real tokenizer: fetching the same 10 task/issue records costs 457 tokens
+via `gh issue list --json ...` vs 1,026 tokens via ClickUp's task-list tool - 2.24x more, because
+ClickUp's API returns a fixed per-item shape (`custom_id`, `priority`, `assignees`, `tags`,
+`due_date`, a nested `list` object) with no field-pruning, where `gh --json` returns exactly what
+was asked for. Use ClickUp when a private org repo is stuck on GitHub Free and shouldn't be
+upgraded to Team, or when tracking must span many separate GitHub orgs without paying for Team on
+each - not as a general-purpose alternative.
 
 ClickUp's hierarchy is `Workspace > Space > Folder > List > Task` (subtasks nest under a task).
 Prefer the `clickup_*` MCP tools for everything they cover - they're already authenticated via the
