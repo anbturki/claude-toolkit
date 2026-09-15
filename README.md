@@ -122,8 +122,21 @@ focused skills plus one migration skill that composes them.
 |-------|-------------|
 | [**github-issues**](skills/github-issues/SKILL.md) | Create, triage, and manage issues - labels, milestones, assignees, search, close with reason |
 | [**github-projects**](skills/github-projects/SKILL.md) | Create/manage a Project (v2) board - custom fields, adding issues as items, setting status via the field/option-ID mechanics `gh` requires |
-| [**github-wiki**](skills/github-wiki/SKILL.md) | Publish and maintain a repo's wiki via git against `<repo>.wiki.git` - only after confirming docs shouldn't stay in-repo |
+| [**github-wiki**](skills/github-wiki/SKILL.md) | Publish and maintain a repo's wiki via git against `<repo>.wiki.git` - only after confirming docs shouldn't stay in-repo (note: GitHub Wikis are unavailable for private repos owned by an organization on the Free plan) |
 | [**github-migrate**](skills/github-migrate/SKILL.md) | One-time move of local tasks/requests/docs (any convention: notes/tasks/, a vault-style dir, TODO.md, docs/) onto the three skills above |
+
+### ClickUp Project Management
+
+An alternative to the GitHub trio above when tasks/docs need to span multiple
+GitHub orgs/accounts under one roof, or when GitHub Wiki's Free-plan
+restriction is a blocker. Uses ClickUp's official MCP server
+(`mcp.clickup.com`) with a raw-REST-API fallback for the handful of
+operations that server doesn't expose.
+
+| Skill | What it does |
+|-------|-------------|
+| [**clickup-tasks**](skills/clickup-tasks/SKILL.md) | Task/List/Folder/Space management via the ClickUp MCP tools, hierarchy best practices, and the personal-API-token REST fallback for space create/delete/move (not exposed by the MCP server) |
+| [**clickup-docs**](skills/clickup-docs/SKILL.md) | ClickUp Docs as a wiki - nested pages, Home landing page convention, and the markdown-formatting rules that avoid mangled imports (no hard-wrapped list items, no fenced-code language tags, no toggle blocks) |
 
 ### Scaffolding - Backend & Data
 
